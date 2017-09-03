@@ -1,19 +1,20 @@
 #include <stdio.h>
-
-typedef struct Foxxo {
-    int placeholder;
-} Foxxo;
+#include "foxxo.h"
 
 Foxxo *Foxxo_Init (void) {
-    return (void*) malloc(sizeof(Foxxo));
+    Foxxo *f = (void*) malloc(sizeof(Foxxo));
+    *(f->vars) = NULL;
+    f->vars_size = 0;
+    return f;
 }
 
-void Foxxo_Exec(Foxxo foxxo) {
-    ;
+void Foxxo_Exec(Foxxo *foxxo, char* code) {
+    Foxxo_Lexer(foxxo, code);
 }
 
 /* Just a placeholder test. */
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
     Foxxo *f = Foxxo_Init();
+    Foxxo_Exec(f, "abc = 1\nbcd = \"Hello!\"\0\0");
     return 0;
 }
