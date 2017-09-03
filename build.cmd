@@ -1,3 +1,3 @@
 @echo off
-%tcc%\tcc -o foxxo.exe foxxo.c
+%tcc%\tcc -o ineffable.exe ineffable.c
 pause

@@ -1,6 +1,6 @@
 /* Breaks the code down into a lexer */
 
-typedef struct Foxxo_BNF {
+typedef struct Ineffable_BNF {
     char *code;
     unsigned int len; /* Does NOT include string null! */
     enum {
@@ -9,15 +9,15 @@ typedef struct Foxxo_BNF {
         operator,
         string
       } type;
-} Foxxo_BNF;
+} Ineffable_BNF;
 
-void Foxxo_Lexer(Foxxo *foxxo, char* code) {
+void Ineffable_Lexer(Ineffable *ineffable, char* code) {
     unsigned int line = 1;
     unsigned int chr = 1;
     //int llist_size = 0;
-    //void **llist = (void*) malloc(sizeof(Foxxo_BNF));
+    //void **llist = (void*) malloc(sizeof(Ineffable_BNF));
     while (code[0]) {
-        Foxxo_BNF* bnf = (Foxxo_BNF *) malloc(sizeof(Foxxo_BNF));
+        Ineffable_BNF* bnf = (Ineffable_BNF *) malloc(sizeof(Ineffable_BNF));
         bnf->code = NULL;
         bnf->len = 0;
         if (code[0] == '\n') {

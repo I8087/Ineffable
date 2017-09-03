@@ -1,4 +1,4 @@
 @echo off
-foxxo.exe
+ineffable.exe
 echo Exited with error code: %errorlevel%
 pause
