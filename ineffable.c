@@ -5,7 +5,7 @@
 
 Ineffable *Ineffable_Init (void) {
     Ineffable *f = (void*) malloc(sizeof(Ineffable));
-    *(f->vars) = NULL;
+    f->vars = NULL;
     f->vars_size = 0;
     return f;
 }

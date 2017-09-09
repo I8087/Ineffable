@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ineffable.h"
+#include "da.h"
 
 typedef struct Ineffable_BNF {
     char *code;
@@ -19,13 +20,11 @@ typedef struct Ineffable_BNF {
 void Ineffable_Lexer(Ineffable *ineffable, char* code) {
     unsigned int line = 1;
     unsigned int chr = 1;
-    int llist_size = 0;
-    Ineffable_BNF **llist = NULL;
+    DA list;
+    DA_qinit(&list);
     while (code[0]) {
-        llist_size++;
-        llist = (Ineffable_BNF**) realloc(llist, sizeof(Ineffable_BNF*) * llist_size);
         Ineffable_BNF *bnf = (Ineffable_BNF *) malloc(sizeof(Ineffable_BNF));
-        llist[llist_size-1] = bnf;
+        DA_append(&list, (int) bnf);
         bnf->code = NULL;
         bnf->len = 0;
         if (code[0] == '\n') {
@@ -38,20 +37,25 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
         } else if (code[0] == '=') {
             code++;
             chr++;
+            bnf->len++;
         } else if (code[0] == '\"') {
             code++;
             chr++;
+            bnf->len++;
             while (code[0] != '\"') {
-                bnf->len++;
                 code++;
                 chr++;
+                bnf->len++;
             }
             code++;
             chr++;
+            bnf->len++;
+
         } else if (code[0] >= 0x30 && code[0] <= 0x39) {
             while (code[0] >= 0x30 && code[0] <= 0x39) {
                 code++;
                 chr++;
+                bnf->len++;
             }
         } else if (
             (code[0] >= 0x41 && code[0] <= 0x5A) ||
@@ -66,14 +70,20 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
                 code++;
                 chr++;
             }
-            bnf->code = (char*) malloc((bnf->len+1) * sizeof(char));
-            strncpy(bnf->code, code-bnf->len, bnf->len);
         } else {
             printf("Error! Unknown input!\n");
             exit(-1);
         }
+        if (bnf->len) {
+            bnf->code = (char*) calloc(bnf->len+1, sizeof(char));
+            strncpy(bnf->code, code-bnf->len, bnf->len);
+        }
     }
-    for (int i = 0; i <llist_size; i++) {
-        printf(llist[llist_size]->code);
+
+    /* Quick debug. */
+    DA_print(&list);
+    for (int i = 0; i < list.len; i++) {
+        Ineffable_BNF b = (Ineffable_BNF) DA_get(&list, i);
+        if (b.code) printf("%d: %s\n", i, b.code);
     }
 }
