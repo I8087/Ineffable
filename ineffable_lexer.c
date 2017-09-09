@@ -1,5 +1,10 @@
 /* Breaks the code down into a lexer */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "ineffable.h"
+
 typedef struct Ineffable_BNF {
     char *code;
     unsigned int len; /* Does NOT include string null! */
@@ -14,16 +19,19 @@ typedef struct Ineffable_BNF {
 void Ineffable_Lexer(Ineffable *ineffable, char* code) {
     unsigned int line = 1;
     unsigned int chr = 1;
-    //int llist_size = 0;
-    //void **llist = (void*) malloc(sizeof(Ineffable_BNF));
+    int llist_size = 0;
+    Ineffable_BNF **llist = NULL;
     while (code[0]) {
-        Ineffable_BNF* bnf = (Ineffable_BNF *) malloc(sizeof(Ineffable_BNF));
+        llist_size++;
+        llist = (Ineffable_BNF**) realloc(llist, sizeof(Ineffable_BNF*) * llist_size);
+        Ineffable_BNF *bnf = (Ineffable_BNF *) malloc(sizeof(Ineffable_BNF));
+        llist[llist_size-1] = bnf;
         bnf->code = NULL;
         bnf->len = 0;
         if (code[0] == '\n') {
             code++;
-            line++;
-            chr =1;
+            chr++;
+            chr = 1;
         } else if (code[0] == ' ') {
             code++;
             chr++;
@@ -64,5 +72,8 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
             printf("Error! Unknown input!\n");
             exit(-1);
         }
+    }
+    for (int i = 0; i <llist_size; i++) {
+        printf(llist[llist_size]->code);
     }
 }
