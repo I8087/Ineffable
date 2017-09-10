@@ -10,10 +10,14 @@ typedef struct Ineffable_BNF {
     char *code;
     unsigned int len; /* Does NOT include string null! */
     enum {
+        unknown,
         identifer,
         number,
         operator,
-        string
+        string,
+        whitespace,
+        newline,
+        comment
       } type;
 } Ineffable_BNF;
 
@@ -31,13 +35,22 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
             code++;
             chr++;
             chr = 1;
+            bnf->type = newline;
+        } else if (code[0] == '#') {
+            while (code[0] && code[0] != '\n') {
+                code++;
+                chr++;
+            }
+            bnf->type = comment;
         } else if (code[0] == ' ') {
             code++;
             chr++;
+            bnf->type = whitespace;
         } else if (code[0] == '=') {
             code++;
             chr++;
             bnf->len++;
+            bnf->type = operator;
         } else if (code[0] == '\"') {
             code++;
             chr++;
@@ -50,12 +63,14 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
             code++;
             chr++;
             bnf->len++;
+            bnf->type = string;
 
         } else if (code[0] >= 0x30 && code[0] <= 0x39) {
             while (code[0] >= 0x30 && code[0] <= 0x39) {
                 code++;
                 chr++;
                 bnf->len++;
+                bnf->type = number;
             }
         } else if (
             (code[0] >= 0x41 && code[0] <= 0x5A) ||
@@ -69,6 +84,7 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
                 bnf->len++;
                 code++;
                 chr++;
+                bnf->type = identifer;
             }
         } else {
             printf("Error! Unknown input!\n");
@@ -84,6 +100,6 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
     DA_print(&list);
     for (int i = 0; i < list.len; i++) {
         Ineffable_BNF b = (Ineffable_BNF) DA_get(&list, i);
-        if (b.code) printf("%d: %s\n", i, b.code);
+        if (b.code) printf("%d: %d\n", i, b.type);
     }
 }
