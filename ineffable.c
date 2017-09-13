@@ -17,6 +17,6 @@ void Ineffable_Exec(Ineffable *ineffable, char* code) {
 /* Just a placeholder test. */
 int main(int argc, char *argv[]) {
     Ineffable *f = Ineffable_Init();
-    Ineffable_Exec(f, "abc = 1\nbcd = \"Hello!\"\0\0");
+    Ineffable_Exec(f, "a = 1 + 1\n a = a + 1\0");
     return 0;
 }

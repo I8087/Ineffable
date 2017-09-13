@@ -9,6 +9,8 @@
 typedef struct Ineffable_BNF {
     char *code;
     unsigned int len; /* Does NOT include string null! */
+    int line;
+    int chr;
     enum {
         unknown,
         identifer,
@@ -31,6 +33,8 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
         DA_append(&list, (int) bnf);
         bnf->code = NULL;
         bnf->len = 0;
+        bnf->line = line;
+        bnf->chr = chr;
         if (code[0] == '\n') {
             code++;
             chr++;
@@ -47,6 +51,16 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
             chr++;
             bnf->type = whitespace;
         } else if (code[0] == '=') {
+            code++;
+            chr++;
+            bnf->len++;
+            bnf->type = operator;
+        } else if (code[0] == '+') {
+            code++;
+            chr++;
+            bnf->len++;
+            bnf->type = operator;
+        } else if (code[0] == '-') {
             code++;
             chr++;
             bnf->len++;
@@ -100,6 +114,6 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
     DA_print(&list);
     for (int i = 0; i < list.len; i++) {
         Ineffable_BNF b = (Ineffable_BNF) DA_get(&list, i);
-        if (b.code) printf("%d: %d\n", i, b.type);
+        if (b.code) printf("%d: %d:%d - \"%s\"\n", i, b.line, b.chr, b.code);
     }
 }
