@@ -38,17 +38,17 @@ DA* Ineffable_Lexer(Ineffable *ineffable, char* code) {
             code++;
             chr++;
             bnf->len++;
-            bnf->type = operator;
+            bnf->type = op;
         } else if (code[0] == '+') {
             code++;
             chr++;
             bnf->len++;
-            bnf->type = operator;
+            bnf->type = op;
         } else if (code[0] == '-') {
             code++;
             chr++;
             bnf->len++;
-            bnf->type = operator;
+            bnf->type = op;
         } else if (code[0] == '\"') {
             code++;
             chr++;
@@ -61,7 +61,7 @@ DA* Ineffable_Lexer(Ineffable *ineffable, char* code) {
             code++;
             chr++;
             bnf->len++;
-            bnf->type = string;
+            bnf->type = constant;
 
         } else if (code[0] >= 0x30 && code[0] <= 0x39) {
             while (code[0] >= 0x30 && code[0] <= 0x39) {

@@ -12,8 +12,8 @@ typedef struct Ineffable_BNF {
         unknown,
         identifer,
         number,
-        operator,
-        string,
+        op,
+        constant,
         whitespace,
         newline,
         comment
