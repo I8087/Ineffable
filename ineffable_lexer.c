@@ -4,33 +4,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ineffable.h"
+#include "ineffable_lexer.h"
 #include "da.h"
 
-typedef struct Ineffable_BNF {
-    char *code;
-    unsigned int len; /* Does NOT include string null! */
-    int line;
-    int chr;
-    enum {
-        unknown,
-        identifer,
-        number,
-        operator,
-        string,
-        whitespace,
-        newline,
-        comment
-      } type;
-} Ineffable_BNF;
-
-void Ineffable_Lexer(Ineffable *ineffable, char* code) {
+DA* Ineffable_Lexer(Ineffable *ineffable, char* code) {
     unsigned int line = 1;
     unsigned int chr = 1;
-    DA list;
-    DA_qinit(&list);
+    DA* list = (DA *) malloc(sizeof(DA));
+    DA_qinit(list);
     while (code[0]) {
         Ineffable_BNF *bnf = (Ineffable_BNF *) malloc(sizeof(Ineffable_BNF));
-        DA_append(&list, (int) bnf);
+        DA_append(list, (int) bnf);
         bnf->code = NULL;
         bnf->len = 0;
         bnf->line = line;
@@ -110,10 +94,5 @@ void Ineffable_Lexer(Ineffable *ineffable, char* code) {
         }
     }
 
-    /* Quick debug. */
-    DA_print(&list);
-    for (int i = 0; i < list.len; i++) {
-        Ineffable_BNF b = (Ineffable_BNF) DA_get(&list, i);
-        if (b.code) printf("%d: %d:%d - \"%s\"\n", i, b.line, b.chr, b.code);
-    }
+    return list;
 }

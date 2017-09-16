@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "ineffable.h"
+#include "ineffable_lexer.h"
+#include "da.h"
 
 Ineffable *Ineffable_Init (void) {
     Ineffable *f = (void*) malloc(sizeof(Ineffable));
@@ -11,7 +13,8 @@ Ineffable *Ineffable_Init (void) {
 }
 
 void Ineffable_Exec(Ineffable *ineffable, char* code) {
-    Ineffable_Lexer(ineffable, code);
+    DA *a = Ineffable_Lexer(ineffable, code);
+    Ineffable_Parser(ineffable, a);
 }
 
 /* Just a placeholder test. */
