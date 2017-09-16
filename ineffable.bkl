@@ -1,0 +1,12 @@
+toolsets = gnu;
+
+program ineffable {
+    includedirs = DA;
+
+    sources {
+        ineffable.c
+        ineffable_lexer.c
+        ineffable_parser.c
+        DA/da.c
+    }
+}
