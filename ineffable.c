@@ -7,13 +7,14 @@
 
 Ineffable *Ineffable_Init (void) {
     Ineffable *f = (void*) malloc(sizeof(Ineffable));
-    f->vars = NULL;
-    f->vars_size = 0;
+    f->vars = (DA*) malloc(sizeof(DA));
+    DA_qinit(f->vars);
     return f;
 }
 
 void Ineffable_Exec(Ineffable *ineffable, char* code) {
     DA *a = Ineffable_Lexer(ineffable, code);
+    Inefable_RPN(ineffable, a);
     Ineffable_Parser(ineffable, a);
 }
 
