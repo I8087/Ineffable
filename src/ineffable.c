@@ -14,7 +14,7 @@ Ineffable *Ineffable_Init (void) {
 
 void Ineffable_Exec(Ineffable *ineffable, char* code) {
     DA *a = Ineffable_Lexer(ineffable, code);
-    Inefable_RPN(ineffable, a);
+    Inefable_LexerRPN(ineffable, a);
     Ineffable_Parser(ineffable, a);
 }
 
