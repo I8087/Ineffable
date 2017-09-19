@@ -1,12 +1,17 @@
+// Bakefile to generate system makefiles for Ineffable.
+
 toolsets = gnu;
 
 program ineffable {
-    includedirs = DA;
+    includedirs += DA;
+    includedirs += src;
 
     sources {
-        ineffable.c
-        ineffable_lexer.c
-        ineffable_parser.c
+        src/ineffable.c
+        src/ineffable_lexer.c
+        src/ineffable_lexerRPN.c
+        src/ineffable_parser.c
+        src/ineffable_assembler.c
         DA/da.c
     }
 }
