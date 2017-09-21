@@ -14,7 +14,7 @@ char* addout(char* code, char* append) {
     return code;
 }
 
-void Ineffable_Parser(Ineffable *ineffable, DA *list) {
+char* Ineffable_Parser(Ineffable *ineffable, DA *list) {
     int exists = 0;
     Ineffable_BNF *b = NULL;
     char *outcode = (char*) calloc(1, sizeof(char));
@@ -43,7 +43,7 @@ void Ineffable_Parser(Ineffable *ineffable, DA *list) {
             outcode = addout(outcode, "\n");
                 break;
             case number:
-                outcode = addout(outcode, "push ");
+                outcode = addout(outcode, "pushn ");
                 outcode = addout(outcode, b->code);
                 outcode = addout(outcode, "\n");
                 break;
@@ -69,5 +69,5 @@ void Ineffable_Parser(Ineffable *ineffable, DA *list) {
                 exit(-1);
         }
     }
-    printf(outcode);
+    return outcode;
 }
