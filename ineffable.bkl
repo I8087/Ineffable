@@ -12,6 +12,7 @@ program ineffable {
         src/ineffable_lexerRPN.c
         src/ineffable_parser.c
         src/ineffable_assembler.c
+        src/ineffable_vm.c
         DA/da.c
     }
 }

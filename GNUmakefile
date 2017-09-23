@@ -45,8 +45,8 @@ builddir = .
 
 all: $(builddir)/ineffable
 
-$(builddir)/ineffable: $(builddir)/ineffable_ineffable.o $(builddir)/ineffable_ineffable_lexer.o $(builddir)/ineffable_ineffable_lexerRPN.o $(builddir)/ineffable_ineffable_parser.o $(builddir)/ineffable_ineffable_assembler.o $(builddir)/ineffable_da.o
-	$(CXX) -o $@ $(LDFLAGS) $(builddir)/ineffable_ineffable.o $(builddir)/ineffable_ineffable_lexer.o $(builddir)/ineffable_ineffable_lexerRPN.o $(builddir)/ineffable_ineffable_parser.o $(builddir)/ineffable_ineffable_assembler.o $(builddir)/ineffable_da.o -pthread
+$(builddir)/ineffable: $(builddir)/ineffable_ineffable.o $(builddir)/ineffable_ineffable_lexer.o $(builddir)/ineffable_ineffable_lexerRPN.o $(builddir)/ineffable_ineffable_parser.o $(builddir)/ineffable_ineffable_assembler.o $(builddir)/ineffable_ineffable_vm.o $(builddir)/ineffable_da.o
+	$(CXX) -o $@ $(LDFLAGS) $(builddir)/ineffable_ineffable.o $(builddir)/ineffable_ineffable_lexer.o $(builddir)/ineffable_ineffable_lexerRPN.o $(builddir)/ineffable_ineffable_parser.o $(builddir)/ineffable_ineffable_assembler.o $(builddir)/ineffable_ineffable_vm.o $(builddir)/ineffable_da.o -pthread
 
 $(builddir)/ineffable_ineffable.o: src/ineffable.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -MD -MP -pthread -IDA -Isrc src/ineffable.c
@@ -62,6 +62,9 @@ $(builddir)/ineffable_ineffable_parser.o: src/ineffable_parser.c
 
 $(builddir)/ineffable_ineffable_assembler.o: src/ineffable_assembler.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -MD -MP -pthread -IDA -Isrc src/ineffable_assembler.c
+
+$(builddir)/ineffable_ineffable_vm.o: src/ineffable_vm.c
+	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -MD -MP -pthread -IDA -Isrc src/ineffable_vm.c
 
 $(builddir)/ineffable_da.o: DA/da.c
 	$(CC) -c -o $@ $(CPPFLAGS) $(CFLAGS) -MD -MP -pthread -IDA -Isrc DA/da.c
