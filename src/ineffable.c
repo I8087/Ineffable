@@ -6,6 +6,20 @@
 #include "ineffable_lexer.h"
 #include "da.h"
 
+/* Safe way of allocating memory. */
+void *Ineffable_Malloc(size_t size) {
+
+    /* Allocate memory via the C Standard Library. */
+    void *r = malloc(size);
+
+    /* If memory couldn't be allocated, throw an error! */
+    if (r == NULL) {
+        printf("MemoryException: Ran out of space!\n");
+        exit(-1);
+    }
+
+}
+
 /* Initializes the Ineffable VM. */
 Ineffable *Ineffable_Init (void) {
 
@@ -16,14 +30,14 @@ Ineffable *Ineffable_Init (void) {
     }
 
     /* Create the VM structure. Used to hold all of the code and etc. */
-    Ineffable *f = (void*) malloc(sizeof(Ineffable));
+    Ineffable *f = (void*) Ineffable_Malloc(sizeof(Ineffable));
 
     /* Create the variable buffer. NOTE: Is this really used??? */
-    f->vars = (DA*) malloc(sizeof(DA));
+    f->vars = (DA*) Ineffable_Malloc(sizeof(DA));
     DA_qinit(f->vars);
 
     /* Create the object buffer. */
-    f->objs = (DA*) malloc(sizeof(DA));
+    f->objs = (DA*) Ineffable_Malloc(sizeof(DA));
     DA_qinit(f->objs);
 
     return f;
