@@ -3,7 +3,6 @@
 #include <string.h>
 #include <limits.h>
 #include "ineffable.h"
-#include "ineffable_lexer.h"
 #include "da.h"
 
 /* Safe way of allocating memory. */
