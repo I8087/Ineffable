@@ -4,26 +4,9 @@
 #include "ineffable.h"
 #include "da.h"
 
-/* List of Ineffable VM opcode. */
-#define NOP 0xCC
-
-#define CALL_SET 0x01
-#define CALL_ADD 0x02
-#define CALL_SUB 0x03
-
-#define NEW_OBJECT 0x10
-#define NEW_NUMBER 0x11
-
-#define LOAD_OBJECT 0x20
-
-typedef struct Ineffable_Object {
-    int obj;
-    char* name;
-} Ineffable_Object;
-
-void addcode(Ineffable_Object *outcode, char append) {
+void addcode(Ineffable_Object_ *outcode, char append) {
     if (!outcode->name) {
-        outcode->name = (char*) malloc(sizeof(char));
+        outcode->name = (char*) Ineffable_Malloc(sizeof(char));
     } else {
         outcode->name = (char*) realloc(outcode->name, (outcode->obj+1) * sizeof(char));
     }
@@ -31,11 +14,13 @@ void addcode(Ineffable_Object *outcode, char append) {
     outcode->obj++;
 }
 
-Ineffable_Object* Ineffable_Assembler(Ineffable *ineffable, char *incode) {
-    Ineffable_Object *tempobj = NULL;
+
+/* NOTE: I dunno what i was thinking, but this Assembler is really busted. */
+Ineffable_Object_* Ineffable_Assembler(Ineffable *ineffable, char *incode) {
+    Ineffable_Object_ *tempobj = NULL;
 
     /* outcode mimics an Ineffable_Object for covienence. */
-    Ineffable_Object *outcode = (Ineffable_Object*) malloc(sizeof(Ineffable_Object));
+    Ineffable_Object_ *outcode = (Ineffable_Object_*) malloc(sizeof(Ineffable_Object));
     outcode->obj = 0;
     outcode->name = NULL;
 
@@ -51,7 +36,7 @@ Ineffable_Object* Ineffable_Assembler(Ineffable *ineffable, char *incode) {
             int c = 0;
             while (incode[c] && incode[c] != '\n') c++;
             if (c) {
-                tempobj = (Ineffable_Object*) malloc(sizeof(Ineffable_Object));
+                tempobj = (Ineffable_Object_*) malloc(sizeof(Ineffable_Object_));
                 tempobj->obj = 0;
                 tempobj->name = (char*) calloc(c+2, sizeof(char));
                 addcode(outcode, NEW_OBJECT);
@@ -85,7 +70,7 @@ Ineffable_Object* Ineffable_Assembler(Ineffable *ineffable, char *incode) {
 
             /* Find the objects position. */
             for (int i=0; i< ineffable->objs->len; i++) {
-                Ineffable_Object *tempobj = (Ineffable_Object*) DA_get(ineffable->objs, i);
+                Ineffable_Object_ *tempobj = (Ineffable_Object_*) DA_get(ineffable->objs, i);
                 if (!strncmp(tempobj->name, incode, c) && strlen(tempobj->name) == c) {
                     addcode(outcode, LOAD_OBJECT);
                     addcode(outcode, i);
@@ -176,6 +161,13 @@ Ineffable_Object* Ineffable_Assembler(Ineffable *ineffable, char *incode) {
             exit(-1);
         }
     }
-    for (int i=0; i<outcode->obj; i++) printf("0x%x\n", outcode->name[i]);
-    return outcode;
+
+    /* Make sure to end the program and properly exit! */
+    addcode(outcode, EXIT);
+
+    /* For debugging purposes. */
+    //for (int i=0; i<outcode->obj; i++) printf("0x%x\n", outcode->name[i]);
+
+    /* Don't return, just manipulate the ineffable object. */
+    return outcode->name;
 }

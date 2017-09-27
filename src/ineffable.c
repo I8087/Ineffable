@@ -5,6 +5,16 @@
 #include "ineffable.h"
 #include "da.h"
 
+/* Creates a new Ineffable object. */
+Ineffable_Object *Ineffable_New_Object(Ineffable *ineffable) {
+    Ineffable_Object *o = (Ineffable_Object*) Ineffable_Malloc(sizeof(Ineffable_Object));
+
+    o->methods = (DA*) Ineffable_Malloc(sizeof(DA));
+    DA_qinit(o->methods);
+
+    return o;
+}
+
 /* Safe way of allocating memory. */
 void *Ineffable_Malloc(size_t size) {
 
@@ -39,6 +49,20 @@ Ineffable *Ineffable_Init (void) {
     f->objs = (DA*) Ineffable_Malloc(sizeof(DA));
     DA_qinit(f->objs);
 
+    /* Create the VM's stack. */
+    f->SP = (DA*) Ineffable_Malloc(sizeof(DA));
+    DA_qinit(f->SP);
+
+    /* Create the code pointer. */
+    f->CP = 0;
+
+    /* Initialize the RAM. */
+    f->RAM = NULL;
+    f->RAM_size = 0;
+
+    /* Initialize the heap. */
+    f->heap = NULL;
+
     return f;
 }
 
@@ -50,16 +74,18 @@ void Ineffable_Deinit(Ineffable *ineffable) {
 }
 
 /* Takes source code, compiles it, and interprets it. */
-void Ineffable_Exec(Ineffable *ineffable, char* code) {
+void Ineffable_Eval(Ineffable *ineffable, char* code) {
     DA *a = Ineffable_Lexer(ineffable, code);
     Inefable_LexerRPN(ineffable, a);
     char *iasm = Ineffable_Parser(ineffable, a);
-    Ineffable_Assembler(ineffable, iasm);
+    char *icode = Ineffable_Assembler(ineffable, iasm);
+    Ineffable_VM(ineffable, icode);
+    Ineffable_Deinit(ineffable);
 }
 
 /* Just a placeholder test. */
 int main(int argc, char *argv[]) {
     Ineffable *f = Ineffable_Init();
-    Ineffable_Exec(f, "a = 100 + 1\n a = a + 1\0");
+    Ineffable_Eval(f, "a = 100 + 1\n a = a + 1\0");
     return 0;
 }
