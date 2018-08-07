@@ -1,3 +1,8 @@
+/**
+ *  @file ineffable.c
+ *  @brief The main script file.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,7 +10,11 @@
 #include "ineffable.h"
 #include "da.h"
 
-/* Creates a new Ineffable object. */
+/**
+ * Creates a new Ineffable object.
+ * @param *ineffable The VM.
+ * @return An Ineffable_Object.
+ */
 Ineffable_Object *Ineffable_New_Object(Ineffable *ineffable) {
     Ineffable_Object *o = (Ineffable_Object*) Ineffable_Malloc(sizeof(Ineffable_Object));
 
@@ -15,7 +24,11 @@ Ineffable_Object *Ineffable_New_Object(Ineffable *ineffable) {
     return o;
 }
 
-/* Safe way of allocating memory. */
+/**
+ * Provides a safe way to allocate memory with a built-in fail safe.
+ * @param size The number of bytes to allocate.
+ * @return The location of the allocation block.
+*/
 void *Ineffable_Malloc(size_t size) {
 
     /* Allocate memory via the C Standard Library. */
@@ -29,7 +42,10 @@ void *Ineffable_Malloc(size_t size) {
 
 }
 
-/* Initializes the Ineffable VM. */
+/**
+ * Initializes the Ineffable VM.
+ * @return The VM.
+ */
 Ineffable *Ineffable_Init (void) {
 
     /* Check to make sure a byte has 8 and only 8 bits. */
@@ -66,14 +82,21 @@ Ineffable *Ineffable_Init (void) {
     return f;
 }
 
-/* Deinitializes the Ineffable VM and preforms any clean up needed. */
+/**
+ * Deinitializes the Ineffable VM and preforms any clean up needed.
+ * @param *ineffable The VM.
+ */
 void Ineffable_Deinit(Ineffable *ineffable) {
     free(ineffable->vars);
     free(ineffable->objs);
     free(ineffable);
 }
 
-/* Takes source code, compiles it, and interprets it. */
+/**
+ * Takes source code, compiles it, and interprets it.
+ * @param *ineffable The VM.
+ * @param code The source code to compile and interpret.
+ */
 void Ineffable_Eval(Ineffable *ineffable, char* code) {
     DA *a = Ineffable_Lexer(ineffable, code);
     Inefable_LexerRPN(ineffable, a);
@@ -83,9 +106,14 @@ void Ineffable_Eval(Ineffable *ineffable, char* code) {
     Ineffable_Deinit(ineffable);
 }
 
-/* Just a placeholder test. */
+/**
+ * Just a placeholder test to run code.
+ * @param argc The number of arguments.
+ * @param *argv[] List of arguments.
+ * @return 0 for successful, otherwise there was an error.
+ */
 int main(int argc, char *argv[]) {
     Ineffable *f = Ineffable_Init();
-    Ineffable_Eval(f, "a = 100 + 1\n a = a + 1\0");
+    //Ineffable_Eval(f, "a = 100 + 1\n a = a + 1\0");
     return 0;
 }
